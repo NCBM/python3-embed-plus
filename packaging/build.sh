@@ -2,7 +2,9 @@
 
 set -e
 
-VERSION="$1" # 3.8.10, 3.10.11
+VERSION="$1" # 3.8.10, 3.10.11, ...
+# ARCH="$2" # win32, amd64
+ARCH=amd64
 
 # Get minor
 VER_MINOR="${VERSION:2:2}"
@@ -11,11 +13,11 @@ if [[ "${VER_MINOR[2]}" == "." ]]; then
 fi
 
 cd ./packaging                              # pwd: PROJECT/packaging
-mkdir -p "$VERSION"
-cd "$VERSION"                               # pwd: PROJECT/packaging/VERSION
+mkdir -p "$VERSION-$ARCH"
+cd "$VERSION-$ARCH"                         # pwd: PROJECT/packaging/VERSION-ARCH
 
 # Download embeddable Python
-EPY_FN="python-$VERSION-embed-amd64.zip"
+EPY_FN="python-$VERSION-embed-$ARCH.zip"
 [[ -e "$EPY_FN" ]] || wget "https://www.python.org/ftp/python/$VERSION/$EPY_FN"
 
 # Unpack
@@ -25,7 +27,7 @@ unzip ../vendor/tcltk.zip
 
 ## Unpack Python
 mkdir -p python
-cd python                                   # pwd: PROJECT/packaging/VERSION/python
+cd python                                   # pwd: PROJECT/packaging/VERSION-ARCH/python
 unzip ../"$EPY_FN"
 rm -f ../"$EPY_FN"
 unzip ../../vendor/3."$VER_MINOR"/inject.zip
