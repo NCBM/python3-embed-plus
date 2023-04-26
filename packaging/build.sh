@@ -28,7 +28,7 @@ unzip ../vendor/tcltk.zip
 mkdir -p python
 cd python                                   # pwd: PROJECT/packaging/VERSION-ARCH/python
 unzip ../"$EPY_FN"
-# rm -f ../"$EPY_FN"
+rm -f ../"$EPY_FN"
 unzip ../../vendor/"$VER_MAJOR.$VER_MINOR"/inject.zip
 
 ## Install Tkinter
