@@ -8,7 +8,7 @@ ARCH=amd64
 
 # Get minor
 VER_MINOR="${VERSION:2:2}"
-if [[ "${VER_MINOR[2]}" == "." ]]; then
+if [[ "${VER_MINOR[2]}" = "." ]]; then
     VER_MINOR="${VERSION:2:1}"
 fi
 
