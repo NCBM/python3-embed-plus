@@ -12,27 +12,28 @@ VER_MINOR=$(cut -d. -f2 <<< "${VERSION}")
 VER_PATCH=$(cut -d. -f3 <<< "${VERSION}")
 
 # Check and update args
-CHKED_ARGS=$(getopt -o S -l setup-site-packages-dir -n configure.sh -- "$@")
+CHKED_ARGS=$(getopt -o SI:X -l setup-site-packages-dir,install-site-package:,remove-executables -n configure.sh -- "$@")
 eval set -- "$CHKED_ARGS"
 
-# [[ -d "./packaging/$VERSION-$ARCH/python" ]] || exit 1
+[[ -d "./packaging/$VERSION-$ARCH/python" ]] || exit 1
 
-# cd "./packaging/$VERSION-$ARCH"/python      # pwd: PROJECT/packaging/VERSION-ARCH/python
+cd "./packaging/$VERSION-$ARCH"/python      # pwd: PROJECT/packaging/VERSION-ARCH/python
 
-setup_site_packages_dir() {
-    echo "Lib/site-packages" >> python${VER_MAJOR}${VER_MINOR}._pth
-}
 
 while true; do
     case "$1" in
         -S|--setup-site-packages-dir)
-            setup_site_packages_dir
+            echo "Lib/site-packages" >> python${VER_MAJOR}${VER_MINOR}._pth
             shift 1
             ;;
-        -I|--install-site-packages)
-            python3 -m pip install -t "Lib/site-packages" --platform win32 \
-                --python-version="$VERSION" --only-binary=:all: \
-                --implementation=cp --prefix="." "$2"
+        -I|--install-site-package)
+            python3 -m pip install --isolated -t "Lib/site-packages" \
+                -I --platform win32 --python-version="$VERSION" \
+                --only-binary=:all: --implementation=cp "$2"
+            shift 2
+            ;;
+        -X|--remove-executables)
+            rm -rf Lib/site-packages/bin
             shift 1
             ;;
         --)
