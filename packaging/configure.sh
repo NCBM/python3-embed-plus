@@ -26,7 +26,13 @@ setup_site_packages_dir() {
 while true; do
     case "$1" in
         -S|--setup-site-packages-dir)
-            echo setup_site_packages_dir
+            setup_site_packages_dir
+            shift 1
+            ;;
+        -I|--install-site-packages)
+            python3 -m pip install -t "Lib/site-packages" --platform win32 \
+                --python-version="$VERSION" --only-binary=:all: \
+                --implementation=cp --prefix="." "$2"
             shift 1
             ;;
         --)
